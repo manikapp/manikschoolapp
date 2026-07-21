@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -28,10 +29,28 @@ export default async function DashboardPage() {
           {profile?.role} · {profile?.user_code}
         </p>
 
+        <div className="mt-6 flex flex-col gap-2">
+          {profile?.role === "teacher" && (
+            <Link
+              href="/dashboard/attendance"
+              className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+            >
+              Scan student attendance →
+            </Link>
+          )}
+          {profile?.role === "admin" && (
+            <Link
+              href="/dashboard/attendance/register"
+              className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+            >
+              View today's attendance register →
+            </Link>
+          )}
+        </div>
+
         <p className="mt-6 text-sm text-black/50">
-          This is the Foundation-phase scaffold — auth and identity are wired up.
-          Attendance, exams, results, fees, and e-learning modules build on top of
-          this per the phased roadmap in the design doc.
+          Phase 2 (attendance & time-tracking) is wired up. Fees, documents, exams/results,
+          and e-learning build on top of this per the phased roadmap.
         </p>
       </div>
     </main>
