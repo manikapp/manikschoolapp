@@ -75,12 +75,13 @@ git init
 git add .
 git commit -m "Foundation phase: auth, users, academic structure"
 git branch -M main
-git remote add origin https://github.com/<your-username>/school-sleek.git
+git remote add origin https://github.com/<your-username>/manikschoolapp.git
 git push -u origin main
 ```
 
-(Create the empty repo on GitHub first, via github.com's "New repository" button —
-don't initialize it with a README so the push above doesn't conflict.)
+(Create the empty repo on GitHub first, named `manikschoolapp`, via github.com's
+"New repository" button — don't initialize it with a README so the push above
+doesn't conflict.)
 
 ## 4. Deploy to Vercel
 
