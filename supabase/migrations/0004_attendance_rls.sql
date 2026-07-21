@@ -11,7 +11,7 @@ alter table teacher_attendance enable row level security;
 -- ------------------------------------------------------------
 create policy "staff manage guardian_passes" on guardian_passes
   for all using (
-    current_role() in ('admin', 'teacher')
+    app_current_role() in ('admin', 'teacher')
     and student_id in (
       select s.id from students s
       join users u on u.id = s.user_id
@@ -29,7 +29,7 @@ create policy "student reads own guardian_passes" on guardian_passes
 -- ------------------------------------------------------------
 create policy "staff manage student_attendance" on student_attendance
   for all using (
-    current_role() in ('admin', 'teacher')
+    app_current_role() in ('admin', 'teacher')
     and student_id in (
       select s.id from students s
       join users u on u.id = s.user_id
@@ -53,7 +53,7 @@ create policy "teacher manages own attendance" on teacher_attendance
 
 create policy "admin manages teacher_attendance" on teacher_attendance
   for all using (
-    current_role() = 'admin'
+    app_current_role() = 'admin'
     and teacher_id in (
       select t.id from teachers t
       join users u on u.id = t.user_id

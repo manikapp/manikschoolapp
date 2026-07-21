@@ -18,7 +18,7 @@ as $$
   select school_id from users where id = auth.uid();
 $$;
 
-create or replace function current_role()
+create or replace function app_current_role()
 returns user_role
 language sql
 security definer
@@ -60,10 +60,10 @@ create policy "select users in own school" on users
   for select using (school_id = current_school_id());
 
 create policy "admin manages users" on users
-  for insert with check (current_role() = 'admin');
+  for insert with check (app_current_role() = 'admin');
 
 create policy "admin updates users" on users
-  for update using (current_role() = 'admin' and school_id = current_school_id());
+  for update using (app_current_role() = 'admin' and school_id = current_school_id());
 
 -- ------------------------------------------------------------
 -- academic structure: read for everyone in the school, write for admins only
@@ -71,8 +71,8 @@ create policy "admin updates users" on users
 create policy "read academic_sessions" on academic_sessions
   for select using (school_id = current_school_id());
 create policy "admin writes academic_sessions" on academic_sessions
-  for all using (current_role() = 'admin' and school_id = current_school_id())
-  with check (current_role() = 'admin' and school_id = current_school_id());
+  for all using (app_current_role() = 'admin' and school_id = current_school_id())
+  with check (app_current_role() = 'admin' and school_id = current_school_id());
 
 create policy "read terms" on terms
   for select using (
@@ -80,24 +80,24 @@ create policy "read terms" on terms
   );
 create policy "admin writes terms" on terms
   for all using (
-    current_role() = 'admin'
+    app_current_role() = 'admin'
     and session_id in (select id from academic_sessions where school_id = current_school_id())
   );
 
 create policy "read departments" on departments
   for select using (school_id = current_school_id());
 create policy "admin writes departments" on departments
-  for all using (current_role() = 'admin' and school_id = current_school_id());
+  for all using (app_current_role() = 'admin' and school_id = current_school_id());
 
 create policy "read class_arms" on class_arms
   for select using (school_id = current_school_id());
 create policy "admin writes class_arms" on class_arms
-  for all using (current_role() = 'admin' and school_id = current_school_id());
+  for all using (app_current_role() = 'admin' and school_id = current_school_id());
 
 create policy "read subjects" on subjects
   for select using (school_id = current_school_id());
 create policy "admin writes subjects" on subjects
-  for all using (current_role() = 'admin' and school_id = current_school_id());
+  for all using (app_current_role() = 'admin' and school_id = current_school_id());
 
 create policy "read department_subjects" on department_subjects
   for select using (
@@ -105,7 +105,7 @@ create policy "read department_subjects" on department_subjects
   );
 create policy "admin writes department_subjects" on department_subjects
   for all using (
-    current_role() = 'admin'
+    app_current_role() = 'admin'
     and department_id in (select id from departments where school_id = current_school_id())
   );
 
@@ -115,7 +115,7 @@ create policy "read class_subject_teachers" on class_subject_teachers
   );
 create policy "admin writes class_subject_teachers" on class_subject_teachers
   for all using (
-    current_role() = 'admin'
+    app_current_role() = 'admin'
     and class_arm_id in (select id from class_arms where school_id = current_school_id())
   );
 
@@ -125,38 +125,38 @@ create policy "admin writes class_subject_teachers" on class_subject_teachers
 -- ------------------------------------------------------------
 create policy "staff read students" on students
   for select using (
-    current_role() in ('admin', 'teacher')
+    app_current_role() in ('admin', 'teacher')
     and user_id in (select id from users where school_id = current_school_id())
   );
 create policy "student reads self" on students
   for select using (user_id = auth.uid());
 create policy "admin writes students" on students
   for all using (
-    current_role() = 'admin'
+    app_current_role() = 'admin'
     and user_id in (select id from users where school_id = current_school_id())
   );
 
 create policy "staff read teachers" on teachers
   for select using (
-    current_role() in ('admin', 'teacher')
+    app_current_role() in ('admin', 'teacher')
     and user_id in (select id from users where school_id = current_school_id())
   );
 create policy "teacher reads self" on teachers
   for select using (user_id = auth.uid());
 create policy "admin writes teachers" on teachers
   for all using (
-    current_role() = 'admin'
+    app_current_role() = 'admin'
     and user_id in (select id from users where school_id = current_school_id())
   );
 
 create policy "admin reads admins" on admins
   for select using (
-    current_role() = 'admin'
+    app_current_role() = 'admin'
     and user_id in (select id from users where school_id = current_school_id())
   );
 create policy "admin writes admins" on admins
   for all using (
-    current_role() = 'admin'
+    app_current_role() = 'admin'
     and user_id in (select id from users where school_id = current_school_id())
   );
 
@@ -165,11 +165,11 @@ create policy "admin writes admins" on admins
 -- a logged-in `users` row in v1 (see design doc), so no self-select policy yet
 -- ------------------------------------------------------------
 create policy "staff manage guardians" on guardians
-  for all using (current_role() in ('admin', 'teacher'));
+  for all using (app_current_role() in ('admin', 'teacher'));
 
 create policy "staff manage student_guardians" on student_guardians
   for all using (
-    current_role() in ('admin', 'teacher')
+    app_current_role() in ('admin', 'teacher')
     and student_id in (
       select s.id from students s
       join users u on u.id = s.user_id
@@ -182,7 +182,7 @@ create policy "staff manage student_guardians" on student_guardians
 -- ------------------------------------------------------------
 create policy "staff manage enrollments" on student_class_enrollments
   for all using (
-    current_role() in ('admin', 'teacher')
+    app_current_role() in ('admin', 'teacher')
     and class_arm_id in (select id from class_arms where school_id = current_school_id())
   );
 create policy "student reads own enrollments" on student_class_enrollments
