@@ -22,8 +22,14 @@ fees, and e-learning build on top of this in later phases.
    - `supabase/migrations/0004_attendance_rls.sql`
    - `supabase/migrations/0005_fees_schema.sql`
    - `supabase/migrations/0006_fees_rls.sql`
-3. Go to **Settings > API** and copy your **Project URL** and **anon public key**.
-4. Go to **Authentication > Providers** and make sure Email is enabled.
+   - `supabase/migrations/0007_documents_schema.sql`
+   - `supabase/migrations/0008_documents_rls.sql`
+3. Go to **Storage** and create a new bucket named `documents`, set to **public**. This
+   is where generated stamps, letters, and score sheet PDFs get uploaded — it's a
+   dashboard action, not part of the SQL migrations, since bucket creation/policies
+   work a bit differently from table RLS.
+4. Go to **Settings > API** and copy your **Project URL** and **anon public key**.
+5. Go to **Authentication > Providers** and make sure Email is enabled.
 
 ### Creating your first school + admin user
 
@@ -104,6 +110,9 @@ app/
     fee-payments/                record a payment (generates receipt number), list history
     fee-payments/[id]/receipt/   receipt data for a single payment
     fee-clearance/[user_code]/   gate check — compares payments against fee_structures
+    school-stamps/               generate/fetch the school's digital stamp (SVG)
+    letters/                     compose a letter, rendered into a letterhead PDF
+    score-sheets/                generate a blank score sheet PDF for a class/subject/term
 lib/
   supabase/                      browser + server Supabase clients
   qr.ts                          QR token generation/verification
@@ -132,15 +141,21 @@ doc's "biggest risks" section).
 1. ~~Foundation~~ — auth, users, digital ID/QR, academic structure
 2. ~~Attendance & time-tracking~~ — clock-in/out, WhatsApp, guardian pass, teacher self-clock
 3. ~~Fees & clearance~~ — payment recording, receipts, gate clearance check
-4. Documents (stamp/letterhead/score sheet generators)
+4. ~~Documents~~ — stamp generator, letter writer, score sheet generator
 5. Exams & results (CBT, anti-cheat, flexible CA scoring, auto-recalculation, ranking)
 6. E-learning (Google Meet integration, video/material uploads)
 
 See the full system design doc for the database schema each of these phases needs —
 the tables aren't in the migrations yet since they belong to their respective phases.
 
-**Known gap to flag:** receipts currently return as JSON (`/api/fee-payments/:id/receipt`),
-not a rendered PDF — actual PDF generation (with the school's letterhead/logo) is shared
-machinery with the Documents module (letters, result sheets, stamps all need the same
-PDF-rendering approach), so it makes more sense to build once, there, rather than
-duplicating a one-off PDF setup here.
+**Known gaps to flag:**
+- Fee receipts (phase 3) still return JSON, not a PDF — now that this module's PDF
+  pipeline (`lib/pdf.ts`, `lib/storage.ts`) exists, wiring receipts through it is a
+  quick follow-up rather than new infrastructure.
+- The stamp is a simple SVG (name + ring, no curved text/crest) — good enough to prove
+  the pipeline, but a school will likely want a more elaborate design. It's also not
+  yet embedded into the letter or score sheet PDFs — that wiring belongs with the
+  Exams & Results phase, once result sheets (the main thing a stamp goes on) exist.
+- Letterhead template selection in the letters UI isn't built yet (the API accepts a
+  `template_id`, the form doesn't expose it) — first school-specific letterhead design
+  needed before that's worth wiring up.

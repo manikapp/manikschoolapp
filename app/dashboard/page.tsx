@@ -66,6 +66,24 @@ export default async function DashboardPage() {
               >
                 Check fee clearance at the gate →
               </Link>
+              <Link
+                href="/dashboard/documents/stamp"
+                className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+              >
+                Generate school stamp →
+              </Link>
+              <Link
+                href="/dashboard/documents/letters"
+                className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+              >
+                Write a letter →
+              </Link>
+              <Link
+                href="/dashboard/documents/score-sheets"
+                className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+              >
+                Generate score sheets →
+              </Link>
             </>
           )}
           {profile?.role === "student" && (
@@ -79,7 +97,7 @@ export default async function DashboardPage() {
         </div>
 
         <p className="mt-6 text-sm text-black/50">
-          Phase 3 (fees & clearance) is wired up. Documents, exams/results, and e-learning
+          Phase 4 (documents & branding) is wired up. Exams/results and e-learning
           build on top of this per the phased roadmap.
         </p>
       </div>
