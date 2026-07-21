@@ -36,9 +36,13 @@ fees, and e-learning build on top of this in later phases.
 
 ### Creating your first school + admin user
 
-Supabase Auth creates rows in `auth.users`, not your `public.users` table — you need
-both. After signing up a user via Supabase Auth (dashboard, or your own sign-up flow
-once you build one), insert their profile row manually to get started:
+Visit `/signup` (once running — see below) to register a new school and its first
+admin account in one step, no manual SQL required. This uses a privileged server-side
+route (`app/api/auth/register-school`) that needs the **service role key**, not just
+the anon key — see the env var setup below.
+
+If you'd rather do it by hand (e.g. debugging, or seeding a school without going
+through the UI), the old manual path still works:
 
 ```sql
 insert into schools (name) values ('Greenfield High School') returning id;
@@ -56,20 +60,20 @@ values (
 );
 ```
 
-A proper "admin creates a user" flow (`POST /users` from the API reference doc) is the
-next thing to build on top of this scaffold — this manual step is just to get your
-first login working.
+Teacher and student accounts are still admin-created rather than self-signup — that
+part of the design (accounts need someone to vouch for the role/enrollment) hasn't
+changed, only the *first* admin per school now has a proper onboarding flow.
 
 ## 2. Run locally
 
 ```bash
 npm install
 cp .env.example .env.local
-# fill in .env.local with your Supabase URL/anon key and a random QR_SIGNING_SECRET
+# fill in .env.local: Supabase URL, anon key, service role key, and a random QR_SIGNING_SECRET
 npm run dev
 ```
 
-Visit `http://localhost:3000` — it'll redirect to `/login`.
+Visit `http://localhost:3000` — it'll redirect to `/login`, which links to `/signup`.
 
 ## 3. Push to GitHub
 
@@ -90,8 +94,8 @@ doesn't conflict.)
 
 1. Go to [vercel.com/new](https://vercel.com/new) and import the GitHub repo you just pushed.
 2. Vercel will auto-detect Next.js — no build config changes needed.
-3. Under **Environment Variables**, add the same three variables from your `.env.local`:
-   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `QR_SIGNING_SECRET`.
+3. Under **Environment Variables**, add the same four variables from your `.env.local`:
+   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `QR_SIGNING_SECRET`.
 4. Deploy. Every future push to `main` redeploys automatically.
 
 ## 5. Automate migrations with GitHub Actions (optional but recommended)

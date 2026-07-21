@@ -66,6 +66,13 @@ export default function LoginPage() {
         >
           {loading ? "Signing in…" : "Sign in"}
         </button>
+
+        <p className="mt-4 text-center text-sm text-black/50">
+          New school?{" "}
+          <a href="/signup" className="text-accent underline">
+            Register here
+          </a>
+        </p>
       </form>
     </main>
   );
