@@ -20,6 +20,8 @@ fees, and e-learning build on top of this in later phases.
    - `supabase/migrations/0002_rls_policies.sql`
    - `supabase/migrations/0003_attendance_schema.sql`
    - `supabase/migrations/0004_attendance_rls.sql`
+   - `supabase/migrations/0005_fees_schema.sql`
+   - `supabase/migrations/0006_fees_rls.sql`
 3. Go to **Settings > API** and copy your **Project URL** and **anon public key**.
 4. Go to **Authentication > Providers** and make sure Email is enabled.
 
@@ -90,12 +92,18 @@ app/
   dashboard/                     role-based landing page after login
     attendance/                  teacher: scan/type a student ID to clock in or out
     attendance/register/         admin: today's attendance register
+    fees/                        admin: record payments + recent list; student: own payment history
+    fees/clearance/              teacher/admin: gate check — cleared/owing only, no amount shown
   api/
     id-card/                     current user's ID card + QR data URL
     attendance/clock-in/         student clock-in, WhatsApp to guardian
     attendance/clock-out/        student clock-out, checks guardian pass, WhatsApp
     guardian-passes/             create/list pickup passes
     teacher-attendance/          teacher self clock-in/out, WhatsApp to admins
+    fee-structures/              admin sets expected fee per level/term
+    fee-payments/                record a payment (generates receipt number), list history
+    fee-payments/[id]/receipt/   receipt data for a single payment
+    fee-clearance/[user_code]/   gate check — compares payments against fee_structures
 lib/
   supabase/                      browser + server Supabase clients
   qr.ts                          QR token generation/verification
@@ -123,10 +131,16 @@ doc's "biggest risks" section).
 
 1. ~~Foundation~~ — auth, users, digital ID/QR, academic structure
 2. ~~Attendance & time-tracking~~ — clock-in/out, WhatsApp, guardian pass, teacher self-clock
-3. Fees & clearance
+3. ~~Fees & clearance~~ — payment recording, receipts, gate clearance check
 4. Documents (stamp/letterhead/score sheet generators)
 5. Exams & results (CBT, anti-cheat, flexible CA scoring, auto-recalculation, ranking)
 6. E-learning (Google Meet integration, video/material uploads)
 
 See the full system design doc for the database schema each of these phases needs —
 the tables aren't in the migrations yet since they belong to their respective phases.
+
+**Known gap to flag:** receipts currently return as JSON (`/api/fee-payments/:id/receipt`),
+not a rendered PDF — actual PDF generation (with the school's letterhead/logo) is shared
+machinery with the Documents module (letters, result sheets, stamps all need the same
+PDF-rendering approach), so it makes more sense to build once, there, rather than
+duplicating a one-off PDF setup here.

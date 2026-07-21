@@ -31,26 +31,56 @@ export default async function DashboardPage() {
 
         <div className="mt-6 flex flex-col gap-2">
           {profile?.role === "teacher" && (
-            <Link
-              href="/dashboard/attendance"
-              className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
-            >
-              Scan student attendance →
-            </Link>
+            <>
+              <Link
+                href="/dashboard/attendance"
+                className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+              >
+                Scan student attendance →
+              </Link>
+              <Link
+                href="/dashboard/fees/clearance"
+                className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+              >
+                Check fee clearance at the gate →
+              </Link>
+            </>
           )}
           {profile?.role === "admin" && (
+            <>
+              <Link
+                href="/dashboard/attendance/register"
+                className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+              >
+                View today's attendance register →
+              </Link>
+              <Link
+                href="/dashboard/fees"
+                className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+              >
+                Record and view fee payments →
+              </Link>
+              <Link
+                href="/dashboard/fees/clearance"
+                className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
+              >
+                Check fee clearance at the gate →
+              </Link>
+            </>
+          )}
+          {profile?.role === "student" && (
             <Link
-              href="/dashboard/attendance/register"
+              href="/dashboard/fees"
               className="rounded-md border border-black/15 px-3 py-2 text-sm hover:bg-black/[0.03]"
             >
-              View today's attendance register →
+              View my fee payments →
             </Link>
           )}
         </div>
 
         <p className="mt-6 text-sm text-black/50">
-          Phase 2 (attendance & time-tracking) is wired up. Fees, documents, exams/results,
-          and e-learning build on top of this per the phased roadmap.
+          Phase 3 (fees & clearance) is wired up. Documents, exams/results, and e-learning
+          build on top of this per the phased roadmap.
         </p>
       </div>
     </main>
