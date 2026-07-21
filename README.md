@@ -16,14 +16,17 @@ fees, and e-learning build on top of this in later phases.
 
 1. Create a project at [supabase.com](https://supabase.com).
 2. In the SQL Editor, run the migration files **in order**:
-   - `supabase/migrations/0001_foundation_schema.sql`
-   - `supabase/migrations/0002_rls_policies.sql`
-   - `supabase/migrations/0003_attendance_schema.sql`
-   - `supabase/migrations/0004_attendance_rls.sql`
-   - `supabase/migrations/0005_fees_schema.sql`
-   - `supabase/migrations/0006_fees_rls.sql`
-   - `supabase/migrations/0007_documents_schema.sql`
-   - `supabase/migrations/0008_documents_rls.sql`
+   - `supabase/migrations/20260701000001_foundation_schema.sql`
+   - `supabase/migrations/20260701000002_rls_policies.sql`
+   - `supabase/migrations/20260701000003_attendance_schema.sql`
+   - `supabase/migrations/20260701000004_attendance_rls.sql`
+   - `supabase/migrations/20260701000005_fees_schema.sql`
+   - `supabase/migrations/20260701000006_fees_rls.sql`
+   - `supabase/migrations/20260701000007_documents_schema.sql`
+   - `supabase/migrations/20260701000008_documents_rls.sql`
+   - `supabase/migrations/20260701000009_exams_results_schema.sql`
+   - `supabase/migrations/20260701000010_exams_results_functions.sql`
+   - `supabase/migrations/20260701000011_exams_results_rls.sql`
 3. Go to **Storage** and create a new bucket named `documents`, set to **public**. This
    is where generated stamps, letters, and score sheet PDFs get uploaded — it's a
    dashboard action, not part of the SQL migrations, since bucket creation/policies
@@ -91,7 +94,44 @@ doesn't conflict.)
    `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `QR_SIGNING_SECRET`.
 4. Deploy. Every future push to `main` redeploys automatically.
 
-## Project structure
+## 5. Automate migrations with GitHub Actions (optional but recommended)
+
+A workflow at `.github/workflows/supabase-migrations.yml` runs `supabase db push`
+automatically whenever a push to `main` touches `supabase/migrations/` — so from now
+on, adding a new migration file and pushing is enough; you don't need to paste it into
+the SQL Editor yourself.
+
+**Before turning this on, there's a required one-time step.** Supabase's CLI tracks
+which migrations have already run in a table on your database. Since every migration
+so far was applied by hand (pasted into the SQL Editor), Supabase has no record of them
+— if you skip this step, the workflow's first run will try to re-run all 11 files from
+scratch and fail with "already exists" errors.
+
+### One-time setup (run these on your own machine, not in CI)
+
+1. Install the Supabase CLI: `npm install -g supabase`
+2. Log in: `supabase login` (opens a browser to authenticate)
+3. Link this project: `supabase link --project-ref wcqqbbnwrekubywyndzl`
+4. Mark all 11 already-applied migrations as done, without re-running them:
+   ```bash
+   supabase migration repair --status applied \
+     20260701000001 20260701000002 20260701000003 20260701000004 \
+     20260701000005 20260701000006 20260701000007 20260701000008 \
+     20260701000009 20260701000010 20260701000011
+   ```
+5. Verify it worked: `supabase migration list` should show all 11 marked as applied
+   both locally and remotely, with nothing pending.
+
+### GitHub repo secrets (Settings > Secrets and variables > Actions)
+
+| Secret | Where to get it |
+|---|---|
+| `SUPABASE_ACCESS_TOKEN` | Supabase dashboard → your account menu → **Account Preferences → Access Tokens** → generate one. This authenticates the CLI, not your database — treat it like a password. |
+| `SUPABASE_PROJECT_REF` | The project ref from your dashboard URL — for this project, `wcqqbbnwrekubywyndzl` |
+| `SUPABASE_DB_PASSWORD` | The database password set when the project was created. Forgot it? **Settings → Database → Reset database password** (this changes it, so update the secret too if you reset it) |
+
+Once the one-time repair is done and the three secrets are set, every future migration
+file you add and push will apply automatically — nothing further to configure.
 
 ```
 app/
