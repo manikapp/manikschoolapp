@@ -15,9 +15,11 @@ fees, and e-learning build on top of this in later phases.
 ## 1. Set up Supabase
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. In the SQL Editor, run the two migration files in order:
+2. In the SQL Editor, run the migration files **in order**:
    - `supabase/migrations/0001_foundation_schema.sql`
    - `supabase/migrations/0002_rls_policies.sql`
+   - `supabase/migrations/0003_attendance_schema.sql`
+   - `supabase/migrations/0004_attendance_rls.sql`
 3. Go to **Settings > API** and copy your **Project URL** and **anon public key**.
 4. Go to **Authentication > Providers** and make sure Email is enabled.
 
@@ -84,24 +86,47 @@ don't initialize it with a README so the push above doesn't conflict.)
 
 ```
 app/
-  login/             sign-in page
-  dashboard/          role-based landing page after login
-  api/id-card/        returns the current user's ID card + QR data URL
+  login/                         sign-in page
+  dashboard/                     role-based landing page after login
+    attendance/                  teacher: scan/type a student ID to clock in or out
+    attendance/register/         admin: today's attendance register
+  api/
+    id-card/                     current user's ID card + QR data URL
+    attendance/clock-in/         student clock-in, WhatsApp to guardian
+    attendance/clock-out/        student clock-out, checks guardian pass, WhatsApp
+    guardian-passes/             create/list pickup passes
+    teacher-attendance/          teacher self clock-in/out, WhatsApp to admins
 lib/
-  supabase/            browser + server Supabase clients
-  qr.ts                QR token generation/verification
-middleware.ts          keeps auth sessions refreshed, guards /dashboard
-supabase/migrations/    schema + RLS policies, run these in the Supabase SQL editor
+  supabase/                      browser + server Supabase clients
+  qr.ts                          QR token generation/verification
+  notifications.ts               WhatsApp Cloud API integration (logs to console until configured)
+middleware.ts                    keeps auth sessions refreshed, guards /dashboard
+supabase/migrations/             schema + RLS policies, run these in the Supabase SQL editor
 ```
+
+## WhatsApp setup (optional for local dev)
+
+Attendance and teacher clock-in/out notifications go through Meta's WhatsApp Cloud API.
+Without credentials, `lib/notifications.ts` just logs the message to the console instead
+of failing — so you can test the full attendance flow locally before WhatsApp is set up.
+
+To go live, add to your `.env.local` (and to Vercel's environment variables):
+```
+WHATSAPP_ACCESS_TOKEN=
+WHATSAPP_PHONE_NUMBER_ID=
+```
+Getting these requires setting up a Meta Business app and WhatsApp Business number —
+budget lead time for Meta's approval process; it isn't instant (see the cost estimate
+doc's "biggest risks" section).
 
 ## What's next (per the build-phase roadmap)
 
-1. ~~Foundation~~ — this scaffold
-2. Attendance & time-tracking (clock-in/out, WhatsApp notifications, guardian pass)
+1. ~~Foundation~~ — auth, users, digital ID/QR, academic structure
+2. ~~Attendance & time-tracking~~ — clock-in/out, WhatsApp, guardian pass, teacher self-clock
 3. Fees & clearance
 4. Documents (stamp/letterhead/score sheet generators)
 5. Exams & results (CBT, anti-cheat, flexible CA scoring, auto-recalculation, ranking)
 6. E-learning (Google Meet integration, video/material uploads)
 
 See the full system design doc for the database schema each of these phases needs —
-the tables aren't in this migration yet since they belong to their respective phases.
+the tables aren't in the migrations yet since they belong to their respective phases.
