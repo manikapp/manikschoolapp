@@ -53,7 +53,7 @@ export default function AttendanceScanner() {
         <button
           onClick={() => setMode("clock-in")}
           className={`flex-1 rounded-md border px-3 py-2 text-sm ${
-            mode === "clock-in" ? "border-accent bg-accent/10 text-accent" : "border-black/15"
+            mode === "clock-in" ? "border-brass bg-brass/10 text-brass" : "border-black/15"
           }`}
         >
           Clock in
@@ -61,7 +61,7 @@ export default function AttendanceScanner() {
         <button
           onClick={() => setMode("clock-out")}
           className={`flex-1 rounded-md border px-3 py-2 text-sm ${
-            mode === "clock-out" ? "border-accent bg-accent/10 text-accent" : "border-black/15"
+            mode === "clock-out" ? "border-brass bg-brass/10 text-brass" : "border-black/15"
           }`}
         >
           Clock out
@@ -79,7 +79,7 @@ export default function AttendanceScanner() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="rounded-md bg-brass px-4 py-2 text-sm font-medium text-paper disabled:opacity-60"
         >
           {loading ? "…" : "Submit"}
         </button>

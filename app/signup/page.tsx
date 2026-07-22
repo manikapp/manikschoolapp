@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { SealIcon } from "@/components/seal-icon";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -68,52 +69,53 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-10">
+    <main className="flex min-h-screen items-center justify-center bg-paper px-4 py-10 text-ink">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md rounded-xl border border-black/10 bg-white p-8 shadow-sm"
+        className="w-full max-w-md rounded-xl border border-ink/10 bg-white p-8 shadow-sm"
       >
-        <h1 className="mb-1 text-xl font-medium">Register your school</h1>
-        <p className="mb-6 text-sm text-black/60">
+        <SealIcon className="mb-4 h-7 w-7 text-brass" />
+        <h1 className="mb-1 font-display text-xl font-medium">Register your school</h1>
+        <p className="mb-6 text-sm text-ink/60">
           Creates your school and your admin account in one step.
         </p>
 
-        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-black/40">School</p>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink/40">School</p>
         <input
           value={schoolName}
           onChange={(e) => setSchoolName(e.target.value)}
           placeholder="School name"
           required
-          className="mb-3 w-full rounded-md border border-black/15 px-3 py-2 text-sm"
+          className="mb-3 w-full rounded-md border border-ink/15 px-3 py-2 text-sm"
         />
         <input
           value={schoolAddress}
           onChange={(e) => setSchoolAddress(e.target.value)}
           placeholder="Address"
-          className="mb-3 w-full rounded-md border border-black/15 px-3 py-2 text-sm"
+          className="mb-3 w-full rounded-md border border-ink/15 px-3 py-2 text-sm"
         />
         <input
           value={schoolPhone}
           onChange={(e) => setSchoolPhone(e.target.value)}
           placeholder="Phone"
-          className="mb-5 w-full rounded-md border border-black/15 px-3 py-2 text-sm"
+          className="mb-5 w-full rounded-md border border-ink/15 px-3 py-2 text-sm"
         />
 
-        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-black/40">Your admin account</p>
+        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-ink/40">Your admin account</p>
         <div className="mb-3 grid grid-cols-2 gap-3">
           <input
             value={adminFirstName}
             onChange={(e) => setAdminFirstName(e.target.value)}
             placeholder="First name"
             required
-            className="rounded-md border border-black/15 px-3 py-2 text-sm"
+            className="rounded-md border border-ink/15 px-3 py-2 text-sm"
           />
           <input
             value={adminLastName}
             onChange={(e) => setAdminLastName(e.target.value)}
             placeholder="Last name"
             required
-            className="rounded-md border border-black/15 px-3 py-2 text-sm"
+            className="rounded-md border border-ink/15 px-3 py-2 text-sm"
           />
         </div>
         <input
@@ -122,7 +124,7 @@ export default function SignupPage() {
           type="email"
           placeholder="Email"
           required
-          className="mb-3 w-full rounded-md border border-black/15 px-3 py-2 text-sm"
+          className="mb-3 w-full rounded-md border border-ink/15 px-3 py-2 text-sm"
         />
         <input
           value={adminPassword}
@@ -131,22 +133,22 @@ export default function SignupPage() {
           placeholder="Password"
           required
           minLength={6}
-          className="mb-5 w-full rounded-md border border-black/15 px-3 py-2 text-sm"
+          className="mb-5 w-full rounded-md border border-ink/15 px-3 py-2 text-sm"
         />
 
-        {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+        {error && <p className="mb-4 text-sm text-margin">{error}</p>}
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-md bg-accent px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="w-full rounded-md bg-brass px-3 py-2 text-sm font-medium text-paper disabled:opacity-60"
         >
           {loading ? "Creating your school…" : "Create school and sign in"}
         </button>
 
-        <p className="mt-4 text-center text-sm text-black/50">
+        <p className="mt-4 text-center text-sm text-ink/50">
           Already have an account?{" "}
-          <a href="/login" className="text-accent underline">
+          <a href="/login" className="text-brass underline">
             Sign in
           </a>
         </p>

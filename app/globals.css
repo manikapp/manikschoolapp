@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ruled-paper {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 27px,
+      rgba(22, 40, 63, 0.06) 28px
+    ),
+    linear-gradient(
+      to right,
+      transparent 64px,
+      rgba(168, 58, 46, 0.28) 65px,
+      transparent 66px
+    );
+}
+
+@keyframes stamp-down {
+  0% {
+    transform: scale(1.5) rotate(-14deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(0.95) rotate(-4deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(-6deg);
+    opacity: 1;
+  }
+}
+
+.animate-stamp {
+  animation: stamp-down 0.7s cubic-bezier(0.2, 0.8, 0.3, 1) 0.3s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-stamp {
+    animation: none;
+  }
+}

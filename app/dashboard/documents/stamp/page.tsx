@@ -33,7 +33,7 @@ export default function StampPage() {
         <button
           onClick={generate}
           disabled={loading}
-          className="mt-6 rounded-md bg-accent px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="mt-6 rounded-md bg-brass px-4 py-2 text-sm font-medium text-paper disabled:opacity-60"
         >
           {loading ? "Generating…" : stampUrl ? "Regenerate stamp" : "Generate stamp"}
         </button>

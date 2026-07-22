@@ -85,7 +85,7 @@ async function StudentFeeHistory({ userId }: { userId: string }) {
                 Paid {new Date(p.payment_date).toLocaleDateString()} · ₦{Number(p.amount).toLocaleString()}
               </p>
             </div>
-            <a href={`/api/fee-payments/${p.id}/receipt`} className="text-accent underline">
+            <a href={`/api/fee-payments/${p.id}/receipt`} className="text-brass underline">
               Receipt
             </a>
           </div>

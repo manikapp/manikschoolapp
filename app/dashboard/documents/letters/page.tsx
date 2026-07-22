@@ -67,7 +67,7 @@ export default function LettersPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-md bg-accent px-3 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="w-full rounded-md bg-brass px-3 py-2 text-sm font-medium text-paper disabled:opacity-60"
         >
           {loading ? "Generating PDF…" : "Create letter"}
         </button>
@@ -80,7 +80,7 @@ export default function LettersPage() {
               <p>{l.title}</p>
               <p className="text-black/40">{l.recipient}</p>
             </div>
-            <a href={l.pdf_url} target="_blank" rel="noreferrer" className="text-accent underline">
+            <a href={l.pdf_url} target="_blank" rel="noreferrer" className="text-brass underline">
               Download
             </a>
           </div>
