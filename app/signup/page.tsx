@@ -53,9 +53,13 @@ export default function SignupPage() {
     });
 
     if (signInError) {
-      // Account exists but auto-login failed for some reason — not fatal,
-      // they can still log in manually with what they just set.
-      router.push("/login");
+      // Account was created (the school/admin rows are already in the database) —
+      // just show why the automatic sign-in step specifically failed, rather than
+      // silently bouncing to /login and hiding the actual reason.
+      setError(
+        `Your school and account were created, but automatic sign-in failed: ${signInError.message}`
+      );
+      setLoading(false);
       return;
     }
 
