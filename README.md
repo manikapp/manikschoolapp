@@ -181,6 +181,22 @@ Getting these requires setting up a Meta Business app and WhatsApp Business numb
 budget lead time for Meta's approval process; it isn't instant (see the cost estimate
 doc's "biggest risks" section).
 
+## Admitting students and adding teachers
+
+After your first admin logs in, the order that actually works is:
+
+1. **`/dashboard/academics`** — start an academic session (e.g. "2025/2026"); this
+   auto-creates its 3 terms. Then add class arms (JSS1A, SSS2B, etc.) under it.
+2. **`/dashboard/teachers`** — add teacher accounts.
+3. **`/dashboard/students`** — admit students into a class arm.
+
+Each of these creates a real login (email + the password you set in the form) alongside
+the school record — the admin is responsible for sharing that password with the person,
+since there's no invite-email flow yet. Unlike the original `/signup` flow (which is
+self-service for a brand new school), these three are intentionally admin-only — a
+teacher or student can't just show up and claim a role, someone with authority over the
+school has to create the account.
+
 ## What's next (per the build-phase roadmap)
 
 1. ~~Foundation~~ — auth, users, digital ID/QR, academic structure

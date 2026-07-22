@@ -30,6 +30,9 @@ function Icon({ name }: { name: string }) {
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
   admin: [
     { label: "Overview", href: "/dashboard", icon: "home" },
+    { label: "Academic setup", href: "/dashboard/academics", icon: "settings" },
+    { label: "Students", href: "/dashboard/students", icon: "clipboard" },
+    { label: "Teachers", href: "/dashboard/teachers", icon: "clipboard" },
     { label: "Attendance register", href: "/dashboard/attendance/register", icon: "clock" },
     { label: "Fees", href: "/dashboard/fees", icon: "cash" },
     { label: "Fee clearance", href: "/dashboard/fees/clearance", icon: "shieldCheck" },
