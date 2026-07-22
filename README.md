@@ -181,6 +181,42 @@ Getting these requires setting up a Meta Business app and WhatsApp Business numb
 budget lead time for Meta's approval process; it isn't instant (see the cost estimate
 doc's "biggest risks" section).
 
+## Super Admin (platform-level, manages multiple schools)
+
+A super admin sits above individual schools — they can see every school on the
+platform, not just one. This is a genuinely different tier from a school's own
+`admin` role, and it's **deliberately not self-service** — there's no signup form
+for it, on purpose. If anyone could create their own super admin account, they'd
+have read/write access to every school's students, results, and fees. Only create
+one for someone you fully trust with the entire platform.
+
+**Migrations needed first:** `20260701000012_super_admin_schema.sql` and
+`20260701000013_super_admin_rls.sql` (adds the `is_super_admin` flag and grants it
+access across all 37 tables — nothing works until both are run).
+
+**To create the first super admin**, manually via Supabase's dashboard and SQL Editor:
+
+1. **Authentication → Users → Add user** — create the login (email + password), same
+   as the very first manual bootstrap. Copy their UID.
+2. In the **SQL Editor**, run:
+   ```sql
+   insert into users (id, role, is_super_admin, user_code, qr_token, first_name, last_name, email)
+   values (
+     'PASTE_THE_AUTH_UID_HERE',
+     'admin',
+     true,
+     'SUPER-0001',
+     'temp-token-0001',
+     'Your',
+     'Name',
+     'you@yourdomain.com'
+   );
+   ```
+   Note there's no `school_id` here — that's what makes them platform-wide instead
+   of scoped to one school.
+3. Log in normally at `/login` — you'll land on `/dashboard/platform` instead of a
+   school's regular dashboard.
+
 ## Admitting students and adding teachers
 
 After your first admin logs in, the order that actually works is:

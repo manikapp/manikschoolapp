@@ -28,6 +28,10 @@ function Icon({ name }: { name: string }) {
 }
 
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
+  super_admin: [
+    { label: "Platform overview", href: "/dashboard/platform", icon: "home" },
+    { label: "Schools", href: "/dashboard/platform/schools", icon: "shieldCheck" }
+  ],
   admin: [
     { label: "Overview", href: "/dashboard", icon: "home" },
     { label: "Academic setup", href: "/dashboard/academics", icon: "settings" },
@@ -60,16 +64,18 @@ const NAV_BY_ROLE: Record<string, NavItem[]> = {
 export function DashboardSidebar({
   role,
   schoolName,
-  fullName
+  fullName,
+  isSuperAdmin
 }: {
   role: string;
   schoolName: string;
   fullName: string;
+  isSuperAdmin?: boolean;
 }) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
-  const items = NAV_BY_ROLE[role] ?? NAV_BY_ROLE.student;
+  const items = isSuperAdmin ? NAV_BY_ROLE.super_admin : NAV_BY_ROLE[role] ?? NAV_BY_ROLE.student;
 
   async function signOut() {
     await supabase.auth.signOut();
@@ -83,7 +89,7 @@ export function DashboardSidebar({
         <SealIcon className="h-6 w-6 text-brass" />
         <div>
           <p className="font-display text-sm font-medium text-paper">{schoolName}</p>
-          <p className="text-xs capitalize text-paper/50">{role}</p>
+          <p className="text-xs capitalize text-paper/50">{isSuperAdmin ? "Super Admin" : role}</p>
         </div>
       </div>
 

@@ -56,9 +56,11 @@ export default async function DashboardPage() {
 
   const { data: profile } = await supabase
     .from("users")
-    .select("first_name, last_name, role, school_id")
+    .select("first_name, last_name, role, school_id, is_super_admin")
     .eq("id", user.id)
     .single();
+
+  if (profile?.is_super_admin) redirect("/dashboard/platform");
 
   const { data: currentTerm } = await supabase
     .from("terms")

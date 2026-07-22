@@ -12,16 +12,23 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   const { data: profile } = await supabase
     .from("users")
-    .select("first_name, last_name, role, schools(name)")
+    .select("first_name, last_name, role, is_super_admin, schools(name)")
     .eq("id", user.id)
     .single();
 
-  const schoolName = (profile?.schools as unknown as { name: string })?.name ?? "ManikSchoolApp";
+  const schoolName = profile?.is_super_admin
+    ? "ManikSchoolApp Platform"
+    : (profile?.schools as unknown as { name: string })?.name ?? "ManikSchoolApp";
   const fullName = profile ? `${profile.first_name} ${profile.last_name}` : "";
 
   return (
     <div className="flex min-h-screen bg-paper">
-      <DashboardSidebar role={profile?.role ?? "student"} schoolName={schoolName} fullName={fullName} />
+      <DashboardSidebar
+        role={profile?.role ?? "student"}
+        schoolName={schoolName}
+        fullName={fullName}
+        isSuperAdmin={profile?.is_super_admin ?? false}
+      />
       <div className="flex-1 overflow-y-auto">{children}</div>
     </div>
   );
