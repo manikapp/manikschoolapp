@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SealIcon } from "./seal-icon";
+import { LandingNav } from "./landing-nav";
 
 const MODULES = [
   {
@@ -43,34 +44,10 @@ const STEPS = [
 export function LandingPage() {
   return (
     <div className="min-h-screen bg-paper text-ink">
-      <header className="border-b border-ink/10">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <SealIcon className="h-7 w-7 text-brass" />
-            <span className="font-display text-lg font-medium">ManikSchoolApp</span>
-          </div>
-          <nav className="hidden items-center gap-8 text-sm sm:flex">
-            <a href="#modules" className="hover:text-brass-dark">
-              Modules
-            </a>
-            <a href="#how-it-works" className="hover:text-brass-dark">
-              How it works
-            </a>
-            <Link href="/login" className="hover:text-brass-dark">
-              Sign in
-            </Link>
-          </nav>
-          <Link
-            href="/signup"
-            className="rounded-md bg-ink px-4 py-2 text-sm font-medium text-paper hover:bg-ink-light"
-          >
-            Register your school
-          </Link>
-        </div>
-      </header>
+      <LandingNav />
 
       <section className="ruled-paper border-b border-ink/10">
-        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 sm:grid-cols-2 sm:items-center">
+        <div className="mx-auto grid max-w-6xl gap-12 px-6 py-20 md:grid-cols-2 md:items-center">
           <div>
             <p className="mb-4 text-xs font-medium uppercase tracking-widest text-margin">
               Built for Nigerian secondary schools
